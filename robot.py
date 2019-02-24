@@ -10,7 +10,8 @@ from oi import OI
 from subsystems.drivetrain import DriveTrain
 from subsystems.arm import Arm
 from commands.test_command import TestCommand
-from subsystems.pneumatic import Pneumatic 
+from subsystems.pneumatic import Pneumatic
+
 
 class MyRobot(wpilib.TimedRobot):
     """Main robot class."""
