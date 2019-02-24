@@ -1,24 +1,24 @@
 import wpilib
 from wpilib.command import Subsystem
+import rev
 
+from swift_can_encoder import SwiftCanEncoder
 import constants
 
 class Shoulder(Subsystem):
     
-    def __init__(self, robot, left_pwm, right_pwm, encoder_a, encoder_b):
+    def __init__(self, robot, left_id, right_id):
         super().__init__()
         self.robot = robot
 
-        self.encoder = wpilib.Encoder(
-            encoder_a, 
-            encoder_b, 
-            False, 
-            wpilib.Encoder.EncodingType.k4X
-            )
-        self.encoder.setDistancePerPulse(constants.ENCODER_DISTANCE_PER_PULSE)
-        self.leftMotor = wpilib.VictorSP(constants.LEFT_SHOULDER)
+
+        self.leftMotor = rev.CANSparkMax(left_id, rev.MotorType.kBrushless)
         self.leftMotor.setInverted(True)
-        self.rightMotor = wpilib.VictorSP(constants.RIGHT_SHOULDER)
+
+        self.encoder = SwiftCanEncoder(self.leftMotor.getEncoder())
+        self.encoder.setDistancePerPulse(constants.ENCODER_DISTANCE_PER_PULSE)
+
+        self.rightMotor = rev.CANSparkMax(right_id, rev.MotorType.kBrushless)
 
         self.motors = wpilib.SpeedControllerGroup(self.leftMotor, self.rightMotor)
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import wpilib
 import constants
 
@@ -9,7 +10,6 @@ from typing import Optional
 from oi import OI
 from subsystems.drivetrain import DriveTrain
 from subsystems.arm import Arm
-from commands.test_command import TestCommand
 from subsystems.pneumatic import Pneumatic
 
 
