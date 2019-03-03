@@ -117,3 +117,5 @@ dmypy.json
 
 opkg_cache/
 pip_cache/
+
+.vscode
