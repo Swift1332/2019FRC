@@ -20,7 +20,7 @@ class Elbow(Subsystem):
 
         self.motors = wpilib.SpeedControllerGroup(self.leftMotor, self.rightMotor)
 
-        self.pid = wpilib.PIDController(.01, 0, 0, self.encoder, self.motors)
+        self.pid = wpilib.PIDController(.05, 0, 0, self.encoder, self.motors)
         self.pid.setAbsoluteTolerance(3)
         self.pid.setEnabled(False)
 

@@ -72,12 +72,18 @@ class MyRobot(wpilib.TimedRobot):
         Scheduler.getInstance().run()
         self.drivetrain.drive.arcadeDrive(self.oi.joy1.getY() * -1, self.oi.joy1.getRawAxis(4))
         #self.drivetrain.arcadeDrive(self.oi.joy1.getY() * -1, self.oi.joy1.getRawAxis(4))
-
-        increment_value = 3
         
-        value = self.arm.shoulder.pid.getSetpoint()                
+        axisValue = self.oi.joy2.getRawAxis(1)
+        
+        if abs(axisValue) >= .1: 
+            pass
+        else:
+            axisValue = 0
+        
+        value = self.arm.shoulder.pid.getSetpoint() 
+        increment_value = 0.25               
         self.arm.shoulder.pid.setSetpoint(
-            value + ((self.oi.joy2.getRawAxis(1) * -1) * increment_value)
+            value + ((axisValue * -1) * increment_value)
             )
 
         self.pneumatic.suspension.assist(self.arm.shoulder.pid)
@@ -90,6 +96,7 @@ class MyRobot(wpilib.TimedRobot):
         else:
             axisValue = 0
 
+        increment_value = 0.3333
         self.arm.elbow.pid.setSetpoint(
             value + ((axisValue * -1) * increment_value)
             )
@@ -97,8 +104,9 @@ class MyRobot(wpilib.TimedRobot):
 
         value = self.arm.wrist.pid.getSetpoint()
         controlValue = (-1 * self.oi.joy2.getRawAxis(2)) + self.oi.joy2.getRawAxis(3)
+        increment_value = 0.25
         self.arm.wrist.pid.setSetpoint(
-            value + (controlValue * increment_value)
+            value + (controlValue * 3)
             )
 
 
