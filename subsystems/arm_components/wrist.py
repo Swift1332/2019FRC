@@ -15,7 +15,7 @@ class Wrist(Subsystem):
             False, 
             wpilib.Encoder.EncodingType.k4X
             )
-        self.encoder.setDistancePerPulse(constants.ENCODER_DISTANCE_PER_PULSE)
+        self.encoder.setDistancePerPulse(360/1024)
                 
         self.wristMotor = wpilib.VictorSP(constants.WRIST)
 

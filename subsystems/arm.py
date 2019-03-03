@@ -17,18 +17,14 @@ class Arm(Subsystem):
 
         self.shoulder = Shoulder(
             robot,
-            constants.LEFT_SHOULDER, 
-            constants.RIGHT_SHOULDER, 
-            constants.SHOULDER_ENCODER_A, 
-            constants.SHOULDER_ENCODER_B
+            constants.CAN_LEFT_SHOULDER, 
+            constants.CAN_RIGHT_SHOULDER
             )
 
         self.elbow = Elbow(
             robot,
-            constants.LEFT_ELBOW, 
-            constants.RIGHT_ELBOW, 
-            constants.ELBOW_ENCODER_A, 
-            constants.ELBOW_ENCODER_B
+            constants.CAN_LEFT_ELBOW,
+            constants.CAN_RIGHT_ELBOW
             )
 
         self.wrist = Wrist(
