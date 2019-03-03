@@ -18,7 +18,7 @@ class MyRobot(wpilib.TimedRobot):
 
     def robotInit(self):
         """Robot-wide initialization code should go here."""  
-
+        wpilib.CameraServer.launch()
         self.configuration = constants.COMP_BOT 
         self.arm = Arm(self)   
         self.drivetrain = DriveTrain(self)     
@@ -70,7 +70,7 @@ class MyRobot(wpilib.TimedRobot):
         """Called every 20ms in teleoperated mode"""
         # Print out the num ber of loop iterations passed every second
         Scheduler.getInstance().run()
-        self.drivetrain.drive.arcadeDrive(self.oi.joy1.getY() * -1, self.oi.joy1.getRawAxis(4))
+        self.drivetrain.drive.arcadeDrive(0.6 * (self.oi.joy1.getY() * -1), self.oi.joy1.getRawAxis(4))
         #self.drivetrain.arcadeDrive(self.oi.joy1.getY() * -1, self.oi.joy1.getRawAxis(4))
         
         axisValue = self.oi.joy2.getRawAxis(1)
@@ -81,7 +81,7 @@ class MyRobot(wpilib.TimedRobot):
             axisValue = 0
         
         value = self.arm.shoulder.pid.getSetpoint() 
-        increment_value = 0.25               
+        increment_value = 0.75       
         self.arm.shoulder.pid.setSetpoint(
             value + ((axisValue * -1) * increment_value)
             )
@@ -96,7 +96,7 @@ class MyRobot(wpilib.TimedRobot):
         else:
             axisValue = 0
 
-        increment_value = 0.3333
+        increment_value = 1.5
         self.arm.elbow.pid.setSetpoint(
             value + ((axisValue * -1) * increment_value)
             )
@@ -104,7 +104,7 @@ class MyRobot(wpilib.TimedRobot):
 
         value = self.arm.wrist.pid.getSetpoint()
         controlValue = (-1 * self.oi.joy2.getRawAxis(2)) + self.oi.joy2.getRawAxis(3)
-        increment_value = 0.25
+        increment_value = 0.75
         self.arm.wrist.pid.setSetpoint(
             value + (controlValue * 3)
             )
