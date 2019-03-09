@@ -70,8 +70,8 @@ class MyRobot(wpilib.TimedRobot):
         """Called every 20ms in teleoperated mode"""
         # Print out the num ber of loop iterations passed every second
         Scheduler.getInstance().run()
-        self.drivetrain.drive.arcadeDrive(0.6 * (self.oi.joy1.getY() * -1), self.oi.joy1.getRawAxis(4))
-        #self.drivetrain.arcadeDrive(self.oi.joy1.getY() * -1, self.oi.joy1.getRawAxis(4))
+        self.drivetrain.drive.arcadeDrive(constants.DRIVE_INPUT_Y_AXIS_MULTIPLIER * (self.oi.joy1.getY() * -1), self.oi.joy1.getRawAxis(4) * constants.DRIVE_INPUT_X_AXIS_MULTIPLIER)
+        #self.drivetrain.arcadeDrive(self.oi.joy1.getY(), self.oi.joy1.getRawAxis(4) * -1)
         
         axisValue = self.oi.joy2.getRawAxis(1)
         
@@ -81,12 +81,12 @@ class MyRobot(wpilib.TimedRobot):
             axisValue = 0
         
         value = self.arm.shoulder.pid.getSetpoint() 
-        increment_value = 0.75       
+        
         self.arm.shoulder.pid.setSetpoint(
-            value + ((axisValue * -1) * increment_value)
+            value + ((axisValue * -1) * constants.SHOULDER_MAX_DEGREES_PER_SECOND)
             )
 
-        self.pneumatic.suspension.assist(self.arm.shoulder.pid)
+        self.pneumatic.suspension.assist(axisValue)
         
         value = self.arm.elbow.pid.getSetpoint()
         axisValue = self.oi.joy2.getRawAxis(5)
@@ -96,17 +96,15 @@ class MyRobot(wpilib.TimedRobot):
         else:
             axisValue = 0
 
-        increment_value = 1.5
         self.arm.elbow.pid.setSetpoint(
-            value + ((axisValue * -1) * increment_value)
+            value + ((axisValue * -1) * constants.ELBOW_MAX_DEGREES_PER_SECOND)
             )
         
 
         value = self.arm.wrist.pid.getSetpoint()
-        controlValue = (-1 * self.oi.joy2.getRawAxis(2)) + self.oi.joy2.getRawAxis(3)
-        increment_value = 0.75
+        controlValue = (-1 * self.oi.joy2.getRawAxis(3)) + self.oi.joy2.getRawAxis(2)
         self.arm.wrist.pid.setSetpoint(
-            value + (controlValue * 3)
+            value + (controlValue * constants.WRIST_MAX_DEGREES_PER_SECOND)
             )
 
 
@@ -150,6 +148,14 @@ class MyRobot(wpilib.TimedRobot):
         wpilib.SmartDashboard.putNumber("Wrist PWM", self.arm.wrist.wristMotor.get())
         wpilib.SmartDashboard.putNumber("wrist Encoder Angle", self.arm.wrist.encoder.getDistance())
 
+        wpilib.SmartDashboard.putNumber("Front Left Encoder", self.drivetrain.front_left_encoder.get())
+        wpilib.SmartDashboard.putNumber("Front Left Setpoint", self.drivetrain.frontLeftPID.getSetpoint())
+        wpilib.SmartDashboard.putNumber("Front Right Encoder", self.drivetrain.front_right_encoder.get())
+        wpilib.SmartDashboard.putNumber("Front Right Setpoint", self.drivetrain.frontRightPID.getSetpoint())
+        wpilib.SmartDashboard.putNumber("Rear Left Encoder", self.drivetrain.rear_left_encoder.get())
+        wpilib.SmartDashboard.putNumber("Rear Left Setpoint", self.drivetrain.rearLeftPID.getSetpoint())
+        wpilib.SmartDashboard.putNumber("Rear Right Encoder", self.drivetrain.rear_right_encoder.get())
+        wpilib.SmartDashboard.putNumber("Rear Right Setpoint", self.drivetrain.rearRightPID.getSetpoint())
 
 
 

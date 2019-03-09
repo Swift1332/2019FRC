@@ -24,12 +24,15 @@ class DriveTrain(Subsystem):
         self.front_left_motor_b.setInverted(True)
 
         self.front_left_encoder = SwiftCanEncoder(self.front_left_motor_b.getEncoder())
-        
+        self.front_left_encoder.setPIDSourceType(SwiftCanEncoder.PIDSourceType.kRate)
+        self.front_left_encoder.setDistancePerPulse(constants.DRIVE_TRAIN_FPS_FACTOR)
 
         self.front_right_motor_a = wpilib.Spark(constants.PWM_FRONT_RIGHT_A)
         self.front_right_motor_b = rev.CANSparkMax(constants.CAN_FRONT_RIGHT_B, rev.MotorType.kBrushless)
 
         self.front_right_encoder = SwiftCanEncoder(self.front_right_motor_b.getEncoder())
+        self.front_right_encoder.setPIDSourceType(SwiftCanEncoder.PIDSourceType.kRate)
+        self.front_right_encoder.setDistancePerPulse(constants.DRIVE_TRAIN_FPS_FACTOR)
 
         self.rear_left_motor_a = rev.CANSparkMax(constants.CAN_REAR_LEFT_A, rev.MotorType.kBrushless)
         self.rear_left_motor_a.setInverted(True)
@@ -37,11 +40,15 @@ class DriveTrain(Subsystem):
         self.rear_left_motor_b.setInverted(True)
         
         self.rear_left_encoder = SwiftCanEncoder(self.rear_left_motor_b.getEncoder())
+        self.rear_left_encoder.setPIDSourceType(SwiftCanEncoder.PIDSourceType.kRate)
+        self.rear_left_encoder.setDistancePerPulse(constants.DRIVE_TRAIN_FPS_FACTOR)
 
         self.rear_right_motor_a = rev.CANSparkMax(constants.CAN_REAR_RIGHT_A, rev.MotorType.kBrushless)
         self.rear_right_motor_b = rev.CANSparkMax(constants.CAN_REAR_RIGHT_B, rev.MotorType.kBrushless)
 
-        self.rear_right_encoder = SwiftCanEncoder(self.rear_right_motor_b)
+        self.rear_right_encoder = SwiftCanEncoder(self.rear_right_motor_b.getEncoder())
+        self.rear_right_encoder.setPIDSourceType(SwiftCanEncoder.PIDSourceType.kRate)
+        self.rear_right_encoder.setDistancePerPulse(constants.DRIVE_TRAIN_FPS_FACTOR)
 
         self.front_left_group = wpilib.SpeedControllerGroup(
             self.front_left_motor_a,
@@ -81,9 +88,13 @@ class DriveTrain(Subsystem):
         )
 
         self.frontLeftPID = wpilib.PIDController(.01, 0, 0, self.front_left_encoder, self.front_left_group)
+        self.frontLeftPID.setEnabled(False)
         self.rearLeftPID = wpilib.PIDController(.01, 0, 0, self.rear_left_encoder, self.rear_left_group)
+        self.rearLeftPID.setEnabled(False)
         self.frontRightPID = wpilib.PIDController(.01, 0, 0, self.front_right_encoder, self.front_right_group)
+        self.frontRightPID.setEnabled(False)
         self.rearRightPID = wpilib.PIDController(.01, 0, 0, self.rear_right_encoder, self.rear_right_group)
+        self.rearRightPID.setEnabled(False)
 
     def arcadeDrive(
         self, xSpeed: float, zRotation: float, squareInputs: bool = True) -> None:
@@ -123,8 +134,8 @@ class DriveTrain(Subsystem):
                 leftMotorSpeed = maxInput
                 rightMotorSpeed = xSpeed - zRotation
 
-        leftMotorSpeed = RobotDriveBase.limit(leftMotorSpeed) * self.maxOutput
-        rightMotorSpeed = RobotDriveBase.limit(rightMotorSpeed) * self.maxOutput
+        leftMotorSpeed = RobotDriveBase.limit(leftMotorSpeed) * self.maxOutput * constants.DRIVETRAIN_PID_MAX
+        rightMotorSpeed = RobotDriveBase.limit(rightMotorSpeed) * self.maxOutput * constants.DRIVETRAIN_PID_MAX
 
         self.frontLeftPID.setSetpoint(leftMotorSpeed)
         self.rearLeftPID.setSetpoint(leftMotorSpeed)
