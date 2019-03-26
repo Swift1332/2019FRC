@@ -16,13 +16,14 @@ class Shoulder(Subsystem):
         self.leftMotor.setInverted(True)
 
         self.encoder = SwiftCanEncoder(self.leftMotor.getEncoder())
-        self.encoder.setDistancePerPulse(constants.ENCODER_DISTANCE_PER_PULSE)
+        self.encoder.setDistancePerPulse(constants.SHOULDER_DEGREES_FACTOR)
+        self.encoder.setPosition(constants.SHOULDER_START_POSITION)
 
         self.rightMotor = rev.CANSparkMax(right_id, rev.MotorType.kBrushless)
 
         self.motors = wpilib.SpeedControllerGroup(self.leftMotor, self.rightMotor)
 
-        self.pid = wpilib.PIDController(.125, 0, 0, self.encoder, self.motors)
+        self.pid = wpilib.PIDController(.0325, 0, 0, self.encoder, self.motors)
         self.pid.setAbsoluteTolerance(3)
         self.pid.setEnabled(False)
 

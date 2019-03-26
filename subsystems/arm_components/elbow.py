@@ -16,7 +16,8 @@ class Elbow(Subsystem):
         self.leftMotor.setInverted(True)
 
         self.encoder = SwiftCanEncoder(self.leftMotor.getEncoder())
-        self.encoder.setDistancePerPulse(constants.ENCODER_DISTANCE_PER_PULSE)
+        self.encoder.setDistancePerPulse(constants.ELBOW_DEGREES_FACTOR)
+        self.encoder.setPosition(constants.ELBOW_START_POSITION)
 
         self.motors = wpilib.SpeedControllerGroup(self.leftMotor, self.rightMotor)
 

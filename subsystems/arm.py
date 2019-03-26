@@ -29,9 +29,7 @@ class Arm(Subsystem):
 
         self.wrist = Wrist(
             robot,
-            constants.WRIST, 
-            constants.WRIST_ENCODER_A, 
-            constants.WRIST_ENCODER_B
+            constants.CAN_WRIST
             )
 
         self.intake = Intake(
