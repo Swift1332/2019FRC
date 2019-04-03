@@ -113,16 +113,21 @@ class MyRobot(wpilib.TimedRobot):
         # begin shoulder 
         axisValue = self.oi.joy2.getRawAxis(1)
         print("Shoulder axis value:" + str(axisValue))
+        
         if abs(axisValue) >= .05: 
             pass
         else:
             axisValue = 0
-
+        if self.oi.joy2.getRawButton(5) and self.oi.joy2.getRawButton(6):
+            self.arm.shoulder.encoder.setPosition(constants.SHOULDER_SETPOINT_MIN)
+            self.arm.shoulder.pid.setSetpoint(constants.SHOULDER_SETPOINT_MIN)
 
         #if (elbowAngle > constants.MOVE_SHOULDER_ELBOW_MAX or elbowAngle < constants.MOVE_SHOULDER_ELBOW_MIN) or shoulderAngle > constants.MOVE_ELBOW_SHOULDER_MIN:           
         newSetpoint = shoulderAngle + ((axisValue * -1) * constants.SHOULDER_MAX_DEGREES_PER_SECOND)
         override = self.oi.joy2.getRawButton(5) or self.oi.joy2.getRawButton(6)
         fixingSetpoint = (shoulderAngle >= constants.SHOULDER_SETPOINT_MAX and newSetpoint < shoulderAngle) or (shoulderAngle <= constants.SHOULDER_SETPOINT_MIN and newSetpoint > shoulderAngle)
+
+
 
         if fixingSetpoint or override or (newSetpoint >= constants.SHOULDER_SETPOINT_MIN and newSetpoint <= constants.SHOULDER_SETPOINT_MAX):
 
@@ -169,9 +174,11 @@ class MyRobot(wpilib.TimedRobot):
             self.pneumatic.lift.retract()
             #self.pneumatic.suspension.retract()
         elif self.oi.joy2_btn_b.get():
-            self.pneumatic.hatch.extend()
+            #self.pneumatic.hatch.extend()
+            pass
         elif self.oi.joy2_btn_a.get():
-            self.pneumatic.hatch.retract() 
+            #self.pneumatic.hatch.retract()
+            pass 
 
     def putData(self):
         wpilib.SmartDashboard.putNumber("Arm Length", self.arm.getArmLength())
@@ -200,7 +207,7 @@ class MyRobot(wpilib.TimedRobot):
         wpilib.SmartDashboard.putNumber("Wrist PID Error", self.arm.wrist.pid.getError())
         wpilib.SmartDashboard.putNumber("Wrist PID Set Point", self.arm.wrist.pid.getSetpoint())
         wpilib.SmartDashboard.putNumber("Wrist PWM", self.arm.wrist.wristMotor.get())
-        wpilib.SmartDashboard.putNumber("wrist Encoder Angle", self.arm.wrist.encoder.getDistance())
+        wpilib.SmartDashboard.putNumber("Wrist Encoder Angle", self.arm.wrist.encoder.getDistance())
         
         wpilib.SmartDashboard.putNumber("Left Shoulder Temp:", (self.arm.shoulder.leftMotor.getMotorTemperature() * 9/5) + 32)
         wpilib.SmartDashboard.putNumber("Right Shoulder Temp:", (self.arm.shoulder.rightMotor.getMotorTemperature() * 9/5) + 32)
@@ -209,6 +216,8 @@ class MyRobot(wpilib.TimedRobot):
         wpilib.SmartDashboard.putNumber("Right Elbow Temp:", (self.arm.elbow.rightMotor.getMotorTemperature() * 9/5) + 32)
 
         wpilib.SmartDashboard.putNumber("Wrist Temp:", (self.arm.wrist.wristMotor.getMotorTemperature() * 9/5) + 32)
+
+        wpilib.SmartDashboard.putNumber("Battery Voltage:", wpilib.RobotController.getBatteryVoltage())
 
         #wpilib.SmartDashboard.putNumber("Front Left Encoder", self.drivetrain.front_left_encoder.get())
         #wpilib.SmartDashboard.putNumber("Front Left Setpoint", self.drivetrain.frontLeftPID.getSetpoint())

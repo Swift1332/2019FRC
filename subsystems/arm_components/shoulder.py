@@ -35,6 +35,3 @@ class Shoulder(Subsystem):
 
     def stop(self):
         self.motors.set(0)
-
-
-        
