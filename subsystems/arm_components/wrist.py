@@ -1,25 +1,21 @@
 import wpilib
 from wpilib.command import Subsystem
-
+import rev
 import constants
+from swift_can_encoder import SwiftCanEncoder
 
 class Wrist(Subsystem):
     
-    def __init__(self, robot, left_pwm, encoder_a, encoder_b):
+    def __init__(self, robot, can_id):
         super().__init__()
         self.robot = robot
 
-        self.encoder = wpilib.Encoder(
-            encoder_a, 
-            encoder_b, 
-            False, 
-            wpilib.Encoder.EncodingType.k4X
-            )
-        self.encoder.setDistancePerPulse(360/1024)
+        self.wristMotor = rev.CANSparkMax(can_id, rev.MotorType.kBrushless)
+        self.encoder = SwiftCanEncoder(self.wristMotor.getEncoder())
+        self.encoder.setDistancePerPulse(constants.WRIST_DEGREES_FACTOR)  
+        self.encoder.setPosition(constants.WRIST_START_POSITION)   
                 
-        self.wristMotor = wpilib.VictorSP(constants.WRIST)
-
-        self.pid = wpilib.PIDController(.01, 0, 0, self.encoder, self.wristMotor)
+        self.pid = wpilib.PIDController(.07, 0, 0, self.encoder, self.wristMotor)
         self.pid.setAbsoluteTolerance(3)
         self.pid.setEnabled(False)
 

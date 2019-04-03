@@ -45,7 +45,13 @@ class SwiftCanEncoder(PIDSource):
         self._encoder.setVelocityConversionFactor(distancePerPulse)
 
     def getDistancePerPulse(self) -> float:
-        raise "Not Implemented"
+        if self.sourceType == PIDSource.PIDSourceType.kDisplacement:
+            return self._encoder.getPositionConversionFactor()
+        elif self.sourceType == PIDSource.PIDSourceType.kRate:
+            return self._encoder.getVelocityConversionFactor()
+
+    def setPosition(self, position) -> float:
+        self._encoder.setPosition(position)
 
 
 
